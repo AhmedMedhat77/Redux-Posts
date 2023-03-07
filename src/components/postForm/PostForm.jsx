@@ -75,19 +75,21 @@ function PostForm() {
             onChange={(e) => onTitleChange(e)}
           />
         </div>
-        <label htmlFor="postsAuthor">Author:</label>
-        <select
-          className="users-select"
-          id="postsAuthor"
-          name="postsAuthor"
-          onChange={onAuthourChanged}
-        >
-          <option value=""></option>
-          {usersOptions}
-        </select>
+        <div className="form-item">
+          <label htmlFor="postsAuthor">Author:</label>
+          <select
+            className="users-select"
+            id="postsAuthor"
+            name="postsAuthor"
+            onChange={onAuthourChanged}
+          >
+            <option value=""></option>
+            {usersOptions}
+          </select>
+        </div>
         <div className="form-item">
           <label htmlFor="postsContent">Post Content:</label>
-          <input
+          <textarea
             type="text"
             placeholder="Content"
             id="postsContent"

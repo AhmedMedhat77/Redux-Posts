@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap");
 * {
   padding: 0;
   margin: 0;
@@ -7,6 +8,12 @@ body {
   background-color: #222;
   color: rgba(207, 205, 207, 0.933);
   font-size: 62.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
 }
 section {
   padding: 1.5rem;
@@ -37,31 +44,31 @@ section {
 .form-section {
   margin-bottom: 2rem;
   max-width: 30rem;
-}
-.form {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
 }
 
 .form-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
   align-items: center;
-
   margin-bottom: 2rem;
 }
-.form-item input {
+.form-item input,
+.form select,
+.form textarea {
   padding: 10px 15px;
   outline: transparent;
   border: transparent;
   border-radius: 0.6rem;
-  margin-left: 1rem;
+  resize: none;
+  font-size: 1rem;
 }
 .form-item label {
   font-size: 1rem;
   font-weight: 300;
-  padding-inline: 1rem;
   cursor: pointer;
 }
 
@@ -85,4 +92,17 @@ section {
   margin: 1rem;
   padding: 5px;
   cursor: pointer;
+}
+.author {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.time {
+  font-size: 0.7rem;
+  font-style: italic;
+}
+@media screen and (max-width: 800px) {
+  .form-item {
+    grid-template-columns: 1fr;
+  }
 }

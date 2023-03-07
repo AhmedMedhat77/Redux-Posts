@@ -9,7 +9,7 @@ function TimeAgo(props) {
     timeAgo = `${timePeriod} Ago`;
   }
   return (
-    <span title={props.timeStamp}>
+    <span className="time" title={props.timeStamp}>
       &nbsp; <i>{timeAgo}</i>
     </span>
   );
