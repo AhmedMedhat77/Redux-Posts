@@ -43,7 +43,6 @@ section {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  
 }
 
 .form-item {
@@ -73,5 +72,17 @@ section {
   color: #fff;
   background-color: transparent;
   border-radius: 0.6rem;
+  cursor: pointer;
+}
+.users-select {
+  margin-bottom: 1rem;
+  border: none;
+  padding: 8px 8px;
+  font-size: 1.2rem;
+}
+.reactionButton {
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 5px;
   cursor: pointer;
 }
