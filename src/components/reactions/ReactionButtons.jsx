@@ -1,5 +1,3 @@
-import { useDispatch } from "react-redux";
-import { reactionAdded } from "../../redux/Features/Posts/postsSlice";
 import React from "react";
 
 const ReactionsEmojs = {
@@ -11,18 +9,15 @@ const ReactionsEmojs = {
 };
 
 function ReactionButtons(props) {
-  const dispatch = useDispatch();
 
   const reactionButtons = Object.entries(ReactionsEmojs).map(
     ([name, emoji]) => {
       return (
         <button
-          key={name}
+          key={`${props.post.id}-${name}`}
           type="button"
           className="reactionButton"
-          onClick={() =>
-            dispatch(reactionAdded({ postId: props.post.id, reaction: name }))
-          }
+          onClick={()=>props.onClick(name,props.post)}
         >
           {emoji} {props.post.reactions[name]}
         </button>

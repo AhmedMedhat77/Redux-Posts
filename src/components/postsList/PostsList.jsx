@@ -1,34 +1,67 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectAllPosts } from "../../redux/Features/Posts/postsSlice";
-import PostAuthor from "../PostAuthor/PostAuthor";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+//all from posts Slice
+import {
+  selectAllPosts,
+  getPostsStatus,
+  getPostsError,
+  fetchPost,
+  reactionAdded,
+} from "../../redux/Features/Posts/postsSlice";
+
 import PostForm from "../postForm/PostForm";
-import ReactionButtons from "../reactions/ReactionButtons";
-import TimeAgo from "../TimeAgo/TimeAgo";
+import PostsExcerpt from "../PostsExcerpt/PostsExcerpt";
+
 function PostsList() {
+  const dispatch = useDispatch();
+
   const posts = useSelector(selectAllPosts);
-  // to sort array and slice to make shalow copy
-  const oderPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date));
-  // we will map over orderd posts
-  const renderedPosts = oderPosts?.map((post) => {
-    return (
-      <article className="post" key={post.id}>
-        <h3>{post.title}</h3>
-        <p>{post.content.substring(0, 100)}</p>
-        <p className="postCredit">
-          <PostAuthor userId={post.userId} />
-          <TimeAgo timeStamp={post.date} />
-        </p>
-        <ReactionButtons post={post} />
-      </article>
-    );
-  });
+  const postsStatus = useSelector(getPostsStatus);
+  const postsError = useSelector(getPostsError);
+
+  useEffect(() => {
+    if (postsStatus === "idle") {
+      dispatch(fetchPost());
+    }
+  }, [postsStatus, dispatch]);
+
+  console.log(postsStatus);
+
+  const onPostClick = React.useCallback(
+    (name, post) =>
+      dispatch(reactionAdded({ postId: post.id, reaction: name })),
+    [dispatch]
+  );
+
+  const content = React.useMemo(() => {
+    if (postsStatus === "succeeded") {
+      const oderPosts = posts
+        .slice("")
+        .sort((a, b) => b.date.localeCompare(a.date));
+      return (
+        <>
+          {oderPosts?.map((post) => {
+            return (
+              <PostsExcerpt key={post.id} post={post} onClick={onPostClick} />
+            );
+          })}
+        </>
+      );
+    }
+    if (postsStatus === "loading") {
+      return <p>Loading..</p>;
+    }
+    if (postsStatus === "fail") {
+      return <p>Post Error</p>;
+    }
+    return <p>Something went Wrong</p>;
+  }, [posts, postsStatus]);
 
   return (
     <section className="posts_sections">
       <h2 className="post__title">Posts</h2>
       <PostForm />
-      {renderedPosts}
+      {content}
     </section>
   );
 }

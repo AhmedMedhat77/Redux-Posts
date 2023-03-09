@@ -1,35 +1,24 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 import { sub } from "date-fns";
+import axios from "axios";
+
+const POSTS_URL = "https://jsonplaceholder.typicode.com/posts";
+
 const initialState = {
-  posts: [
-    {
-      id: 1,
-      title: "Learn Redux Tool Kit",
-      content: "Learn Every Day A new Thing",
-      date: sub(new Date(), { minutes: 10 }).toISOString(),
-      reactions: {
-        thumbsUp: 0,
-        wow: 0,
-        heart: 0,
-        rocket: 0,
-        coffe: 0,
-      },
-    },
-    {
-      id: 2,
-      title: "Slices...",
-      content: "Iam hungry Right Now ",
-      date: sub(new Date(), { minutes: 5 }).toISOString(),
-      reactions: {
-        thumbsUp: 0,
-        wow: 0,
-        heart: 0,
-        rocket: 0,
-        coffe: 0,
-      },
-    },
-  ],
+  posts: [],
+  status: "idle",
+  error: null,
 };
+
+export const fetchPost = createAsyncThunk("posts/fetchPosts", async () => {
+  try {
+    const response = await axios.get(POSTS_URL);
+    
+    return response.data;
+  } catch (err) {
+    return err.message;
+  }
+});
 
 const PostsSlice = createSlice({
   name: "posts",
@@ -42,7 +31,7 @@ const PostsSlice = createSlice({
       prepare(title, content, userId) {
         return {
           payload: {
-            id: nanoid(),
+            id: nanoid(3),
             title,
             content,
             date: new Date().toISOString(),
@@ -66,11 +55,45 @@ const PostsSlice = createSlice({
       }
     },
   },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchPost.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPost.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        // adding date and reactions
+        let min = 1;
+        let date = new Date();
+        let d = date.toISOString();
+        const loadedPosts = action.payload.map((post) => {
+    
+          return {
+            ...post,
+            id:nanoid(3),
+            reactions: {
+              thumbsUp: 0,
+              wow: 0,
+              heart: 0,
+              rocket: 0,
+              coffe: 0,
+            },
+            date: d,
+          };
+        });
+        state.posts = state.posts.concat(...loadedPosts);
+      })
+      .addCase(fetchPost.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+  },
 });
 
 // this is  selector beacuse if we change the initial state structure we didn't miss in every component we want to call posts on it
 export const selectAllPosts = (state) => state.posts.posts;
-
+export const getPostsStatus = (state) => state.posts.status;
+export const getPostsError = (state) => state.posts.error;
 // exporting actions
 export const { postAdded, reactionAdded } = PostsSlice.actions;
 
