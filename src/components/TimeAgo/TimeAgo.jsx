@@ -15,4 +15,4 @@ function TimeAgo(props) {
   );
 }
 
-export default TimeAgo;
+export default React.memo(TimeAgo);

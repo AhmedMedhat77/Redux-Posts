@@ -33,7 +33,7 @@ const PostsSlice = createSlice({
           payload: {
             id: nanoid(3),
             title,
-            content,
+            body:content,
             date: new Date().toISOString(),
             userId,
             reactions: {

@@ -7,12 +7,16 @@ function PostsExcerpt(props) {
   return (
     <article className="post">
       <h3>{props.post.title}</h3>
-      {/* <p>{post.content.substring(0, 100)}</p> */}
+      <p>{props.post.body.substring(0, 100)}</p>
       <p className="postCredit">
-        <PostAuthor userId={props.post.userId} />
+        <PostAuthor author={props.author} />
         <TimeAgo timeStamp={props.post.date} />
       </p>
-      <ReactionButtons onClick={props.onClick} post={props.post} />
+      <ReactionButtons
+        reactionsEmojs={props.reactionsEmojs}
+        onClick={props.onClick}
+        post={props.post}
+      />
     </article>
   );
 }

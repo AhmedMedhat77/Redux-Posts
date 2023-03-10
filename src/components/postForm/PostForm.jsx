@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { postAdded } from "../../redux/Features/Posts/postsSlice";
 function PostForm() {
   const [formState, setFormState] = useState({
-    formTitle: "",
-    formContent: "",
+    postsTitle: "",
+    postsContent: "",
     userId: "",
   });
 
@@ -15,8 +15,8 @@ function PostForm() {
   const dispatch = useDispatch();
 
   const onTitleChange = (e) => {
-    let { value } = e.target;
-    return setFormState({ ...formState, formTitle: value });
+    let { value, name } = e.target;
+    return setFormState({ ...formState, [name]: value });
   };
 
   const onContentChange = (e) => {
@@ -37,15 +37,19 @@ function PostForm() {
 
   const onSavePostClicked = (e) => {
     e.preventDefault();
-    if (formState.formTitle && formState.formContent) {
+    if (formState["postsTitle"] && formState["postsContent"]) {
       dispatch(
-        postAdded(formState.formTitle, formState.formContent, formState.userId)
+        postAdded(
+          formState["postsTitle"],
+          formState["postsContent"],
+          formState.userId
+        )
       );
     }
     setFormState((old) => ({
       ...old,
-      formTitle: "",
-      formContent: "",
+      postsTitle: "",
+      postsContent: "",
       userId: "",
     }));
     titleRef.current.focus();
@@ -70,7 +74,7 @@ function PostForm() {
             type="text"
             placeholder="Title"
             id="postsTitle"
-            value={formState.formTitle}
+            value={formState["postsTitle"] ?? ""}
             name="postsTitle"
             onChange={(e) => onTitleChange(e)}
           />
@@ -93,9 +97,9 @@ function PostForm() {
             type="text"
             placeholder="Content"
             id="postsContent"
-            value={formState.formContent}
+            value={formState["postsContent"] ?? ""}
             name="postsContent"
-            onChange={(e) => onContentChange(e)}
+            onChange={(e) => onTitleChange(e)}
           />
         </div>
         <button className="save-post" onClick={(e) => onSavePostClicked(e)}>

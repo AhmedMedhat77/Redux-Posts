@@ -1,16 +1,10 @@
 import React from "react";
 
-const ReactionsEmojs = {
-  thumbsUp: "👍",
-  wow: "😮",
-  heart: "❤️",
-  rocket: "🚀",
-  coffe: "☕",
-};
+
 
 function ReactionButtons(props) {
 
-  const reactionButtons = Object.entries(ReactionsEmojs).map(
+  const reactionButtons = Object.entries(props.reactionsEmojs).map(
     ([name, emoji]) => {
       return (
         <button
@@ -27,4 +21,4 @@ function ReactionButtons(props) {
   return <div>{reactionButtons}</div>;
 }
 
-export default ReactionButtons;
+export default React.memo( ReactionButtons );

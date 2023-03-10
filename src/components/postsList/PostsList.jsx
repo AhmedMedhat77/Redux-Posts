@@ -8,9 +8,18 @@ import {
   fetchPost,
   reactionAdded,
 } from "../../redux/Features/Posts/postsSlice";
+import { selectAllUsers } from "../../redux/Features/users/usersSlice";
 
 import PostForm from "../postForm/PostForm";
 import PostsExcerpt from "../PostsExcerpt/PostsExcerpt";
+
+const ReactionsEmojs = {
+  thumbsUp: "👍",
+  wow: "😮",
+  heart: "❤️",
+  rocket: "🚀",
+  coffe: "☕",
+};
 
 function PostsList() {
   const dispatch = useDispatch();
@@ -18,6 +27,7 @@ function PostsList() {
   const posts = useSelector(selectAllPosts);
   const postsStatus = useSelector(getPostsStatus);
   const postsError = useSelector(getPostsError);
+  const users = useSelector(selectAllUsers);
 
   useEffect(() => {
     if (postsStatus === "idle") {
@@ -33,6 +43,8 @@ function PostsList() {
     [dispatch]
   );
 
+  // const author = users.find((user) => user.id === props.userId);
+
   const content = React.useMemo(() => {
     if (postsStatus === "succeeded") {
       const oderPosts = posts
@@ -42,7 +54,13 @@ function PostsList() {
         <>
           {oderPosts?.map((post) => {
             return (
-              <PostsExcerpt key={post.id} post={post} onClick={onPostClick} />
+              <PostsExcerpt
+                key={post.id}
+                author={users.find((usr) => usr.id === post.userId)}
+                post={post}
+                onClick={onPostClick}
+                reactionsEmojs={ReactionsEmojs}
+              />
             );
           })}
         </>
@@ -55,7 +73,7 @@ function PostsList() {
       return <p>Post Error</p>;
     }
     return <p>Something went Wrong</p>;
-  }, [posts, postsStatus]);
+  }, [onPostClick, posts, postsStatus, users]);
 
   return (
     <section className="posts_sections">
